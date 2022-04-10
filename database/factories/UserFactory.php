@@ -12,10 +12,10 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    static $number = 1;
 
     public function definition()
     {
+        static $number = 1;
         return [
             'name' => $this->faker->name(),
             'email' => 'user'.$number++.'@szerveroldali.hu',

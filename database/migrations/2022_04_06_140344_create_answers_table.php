@@ -16,17 +16,17 @@ class CreateAnswersTable extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            
+
             $table->integer('question_id');
             $table->foreign('question_id')->references('id')->on('questions');
 
             $table->integer('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->integer('choice_id');
+            $table->integer('choice_id')->nullable();
             $table->foreign('choice_id')->references('id')->on('choices');
 
-            $table->text('answer');
+            $table->text('answer')->nullable();
         });
     }
 
