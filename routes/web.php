@@ -25,4 +25,8 @@ Route::get('/home', function () {
     return view('site.home');
 })->middleware(['auth']);
 
+Route::get('/forms', function () {
+    return view('site.forms');
+})->middleware(['auth']);
+
 require __DIR__.'/auth.php';
