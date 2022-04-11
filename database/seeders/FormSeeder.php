@@ -18,7 +18,7 @@ class FormSeeder extends Seeder
         $users = User::all();
         // Create a random number of forms for each user
         foreach ($users as $user) {
-            $numForms = rand(1, 10);
+            $numForms = rand(6, 15);
             for ($i = 0; $i < $numForms; $i++) {
                 Form::factory()->create([
                     'created_by' => $user->id,

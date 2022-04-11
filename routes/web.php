@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FormController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,16 +19,30 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
-Route::get('/dashboard', function () {
-    return view('site.home');
-})->middleware(['auth'])->name('dashboard');
-
 Route::get('/home', function () {
     return view('site.home');
 })->middleware(['auth']);
 
-Route::get('/forms', function () {
-    return view('site.forms');
-})->middleware(['auth']);
+Route::get('/forms', [FormController::class, 'show']);
+
+Route::get('/', function () {
+    return redirect()->route('example-form-show');
+});
+
+Route::get('/pelda-form', function () {
+    return view('form');
+})->name('example-form-show');
+
+Route::post('/', function (Request $request) {
+    $request->validate([
+        'title' => 'required|min:3',
+        'exp-date' => 'required|date',
+        // Form array
+        'groups.*.textinput' => 'required|min:3',
+        'groups.*.selector' => 'required|in:one,two,three',
+    ]);
+    // ...
+})->name('example-form-process');
+
 
 require __DIR__.'/auth.php';

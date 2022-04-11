@@ -1,52 +1,38 @@
 @extends('layouts.layout')
 
-@section('title', 'Feladatok')
+@section('title', 'Forms')
 
 @section('content')
-    <h1 class="ps-3">Feladatok</h1>
+    <h1 class="ps-3">Forms</h1>
     <hr />
     <div class="table-responsive">
-        <table class="table align-left table-hover">
-            <thead class="text-center table-light">
+        <table class="table align-center table-hover">
+            <thead class=" table-light">
                 <tr>
-                    <th style="width: 50%">Title</th>
-                    <th style="width: 40%">Questions</th>
+                    <th class="text-left" style="width: 90%">Title</th>
+                    <th class="text-center" style="width: 10%">Questions</th>
                     <th style="width: 10%"></th>
                 </tr>
             </thead>
-            <tbody class="text-center">
-                <tr class="">
-                    <td>
-                        <div>Title</div>
-                        <div class="text-secondary">2001.12.30</div>
-                    </td>
-                    <td>
-                        <span class="text-dark fs-6">
-                            1
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-outline-secondary">
-                            <i class="fa-solid fa-angles-right fa-fw"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr class="">
-                    <td>
-                        <div>Title</div>
-                        <div class="text-secondary">2001.12.30</div>
-                    </td>
-                    <td>
-                        <span class="text-dark fs-6">
-                            1
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-outline-secondary">
-                            <i class="fa-solid fa-angles-right fa-fw"></i>
-                        </button>
-                    </td>
-                </tr>
+            <tbody class="">
+                @foreach ($forms as $form)
+                    <tr class="">
+                        <td>
+                            <div>{{ $form->title }}</div>
+                            <div class="text-secondary">{{ $form->created_at }}</div>
+                        </td>
+                        <td class="text-center align-middle">
+                            <span class="text-dark fs-6">
+                                {{ $form->questions()->count() }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-secondary">
+                                <i class="fa-solid fa-angles-right fa-fw"></i>
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
