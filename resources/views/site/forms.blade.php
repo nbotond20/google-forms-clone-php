@@ -27,9 +27,9 @@
                             </span>
                         </td>
                         <td>
-                            <button class="btn btn-outline-secondary">
+                            <a class="btn btn-outline-secondary" href="{{ route('forms.show', $form->id) }}">
                                 <i class="fa-solid fa-angles-right fa-fw"></i>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 @endforeach

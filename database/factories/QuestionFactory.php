@@ -16,7 +16,7 @@ class QuestionFactory extends Factory
         return [
             //
             'question' => $this->faker->sentence,
-            'answer_type' => $this->faker->randomElement(['TEXTAREA', 'ONE_CHOICE', 'MULTIPLE_CHOICE']),
+            'answer_type' => $this->faker->randomElement(['TEXTAREA', 'ONE_CHOICE', 'MULTIPLE_CHOICES']),
             'required' => $this->faker->boolean,
         ];
     }

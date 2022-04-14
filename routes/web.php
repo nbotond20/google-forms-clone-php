@@ -21,28 +21,9 @@ Route::get('/', function () {
 
 Route::get('/home', function () {
     return view('site.home');
-})->middleware(['auth']);
+})->middleware(['auth'])->name('home');
 
-Route::get('/forms', [FormController::class, 'show']);
-
-Route::get('/', function () {
-    return redirect()->route('example-form-show');
-});
-
-Route::get('/pelda-form', function () {
-    return view('form');
-})->name('example-form-show');
-
-Route::post('/', function (Request $request) {
-    $request->validate([
-        'title' => 'required|min:3',
-        'exp-date' => 'required|date',
-        // Form array
-        'groups.*.textinput' => 'required|min:3',
-        'groups.*.selector' => 'required|in:one,two,three',
-    ]);
-    // ...
-})->name('example-form-process');
+Route::resource('forms', FormController::class)->middleware(['auth']);
 
 
 require __DIR__.'/auth.php';
