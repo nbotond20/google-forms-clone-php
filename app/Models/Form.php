@@ -14,6 +14,12 @@ class Form extends Model
         'title',
         'expires_at',
         'auth_required',
+        'created_by',
+        'link',
+    ];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
     ];
 
     public function user() {

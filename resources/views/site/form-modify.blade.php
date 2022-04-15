@@ -74,8 +74,7 @@
                                     <input type="checkbox" class="form-check-input" id="fill-required_{{ $uuid }}"
                                         name="groups[{{ $uuid }}][fill-required]"
                                         @if (isset($group['fill-required'])) checked @endif>
-                                    <label class="form-check-label"
-                                        for="fill-required_{{ $uuid }}">Required</label>
+                                    <label class="form-check-label" for="fill-required_{{ $uuid }}">Required</label>
                                 </div>
                                 <input type="text"
                                     class="form-control form-control-lg @if (!isset($group['question-title'])) is-invalid @endif"
@@ -176,10 +175,23 @@
                                                     @php
                                                         $choiceID2 = Str::uuid();
                                                     @endphp
-                                                    <input type="text" class="form-control mb-1"
-                                                        id="choice_{{ $uuid2 }}_{{ $choiceID2 }}"
-                                                        name="groups[{{ $uuid2 }}][choice][{{ $choiceID2 }}]"
-                                                        placeholder="Choice" value="{{ $choice->choice }}">
+                                                    @if ($loop->index == 0)
+                                                        <div class="d-flex gap-1 align-middle justify-middle mb-1">
+                                                            <input type="text" class="form-control"
+                                                                id="choice_{{ $uuid2 }}_{{ $choiceID2 }}"
+                                                                name="groups[{{ $uuid2 }}][choice][{{ $choiceID2 }}]"
+                                                                placeholder="Choice" value="{{ $choice->choice }}">
+                                                        </div>
+                                                    @else
+                                                        <div class="d-flex gap-1 align-middle justify-middle mb-1">
+                                                            <input type="text" class="form-control"
+                                                                id="choice_{{ $uuid2 }}_{{ $choiceID2 }}"
+                                                                name="groups[{{ $uuid2 }}][choice][{{ $choiceID2 }}]"
+                                                                placeholder="Choice" value="{{ $choice->choice }}">
+                                                            <button type="button" class="btn btn-danger delete-choice"
+                                                                data-group-id="{{ $uuid2 }}_{{ $choiceID2 }}">-</button>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
                                                 <div class="mt-2 d-flex justify-content-center">
                                                     <button type="button" class="btn btn-secondary add-choice"
@@ -241,7 +253,9 @@
 
             const choiceFormTemplate = (id, rndID) => `
             <div class="form-group mt-2">
-                <input type="text" class="form-control mb-1" id="choice_${id}_${rndID}" name="groups[${id}][choice][${rndID}]" placeholder="Choice">
+                <div class="d-flex gap-1 align-middle justify-middle mb-1">
+                    <input type="text" class="form-control" id="choice_${id}_${rndID}" name="groups[${id}][choice][${rndID}]" placeholder="Choice">
+                </div>
                 <div class="mt-2 d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary add-choice" data-group-id="${id}">+</button>
                 </div>
@@ -249,7 +263,10 @@
 
             // Choice template
             const choiceTemplate = (id, rndID) =>
-                `<input type="text" class="form-control mb-1" id="choice_${id}_${rndID}" name="groups[${id}][choice][${rndID}]" placeholder="Choice">`;
+                `<div class="d-flex gap-1 align-middle justify-middle mb-1">
+                    <input type="text" class="form-control" id="choice_${id}_${rndID}" name="groups[${id}][choice][${rndID}]" placeholder="Choice">
+                    <button type="button" class="btn btn-danger delete-choice" data-group-id="${id}_${rndID}">-</button>
+                </div>`;
 
             const groups = document.querySelector('#groups');
             const addGroup = document.querySelector('button#add-group');
@@ -265,11 +282,15 @@
                     const group = document.querySelector(`#group_${event.target.dataset.groupId}`);
                     group.remove();
                 }
+                if (event.target && event.target.classList.contains('delete-choice')) {
+                    const choice = document.querySelector(`#choice_${event.target.dataset.groupId}`).parentElement;
+                    choice.remove();
+                }
             });
 
             document.addEventListener('click', (event) => {
                 if (event.target && event.target.classList.contains('add-choice')) {
-                    const id = event.target.parentElement.previousElementSibling.id.split('_')[1];
+                    const id = event.target.parentElement.previousElementSibling.querySelector('input').id.split('_')[1];
                     /* const id = event.target.parentElement.previousElementSibling.id; */
                     event.target.parentElement.insertAdjacentHTML("beforebegin", choiceTemplate(id, uuid.v4()));
                 }

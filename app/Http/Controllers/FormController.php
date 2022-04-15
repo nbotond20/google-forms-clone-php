@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Choice;
 use App\Models\Form;
+use App\Models\Question;
+use App\Models\User;
+use Illuminate\Support\Str;
+use Auth;
+use Illuminate\Http\Request;
 
 class FormController extends Controller
 {
@@ -46,19 +51,48 @@ class FormController extends Controller
             'groups' => 'required|array|min:1',
         ]);
 
-        /* dd($request->request->all());
+        $data = $request->request;
+        $data = $data->all();
+
         $form = new Form(
             [
-                'title' => $request->title,
-                'expires_at' => $request->exp-date,
-                'auth_required' => $request->auth_required,
+                'title' => $data['title'],
+                'expires_at' => $data['exp-date'],
+                'auth_required' => (isset($data['login-req'])),
                 'created_by' => auth()->user()->id,
+                'link' => Str::uuid(),
             ]
-        ); */
+        );
+        $form->save();
+        //$form->user()->associate(\Auth::user());
 
+        foreach ($data['groups'] as $group) {
+            $question = new Question(
+                [
+                    'question' => $group['question-title'],
+                    'answer_type' => $group['answer-type'],
+                    'required' => (isset($group['fill-required'])),
+                    'form_id' => $form->id,
+                ]
+            );
+            $question->save();
+            //$form->questions()->attach($question);
 
+            if ($question->answer_type == 'ONE_CHOICE' || $question->answer_type == 'MULTIPLE_CHOICES') {
+                foreach ($group['choice'] as $choice) {
+                    $choice = new Choice(
+                        [
+                            'choice' => $choice,
+                            'question_id' => $question->id,
+                        ]
+                    );
+                    $choice->save();
+                    //$choice->question()->associate($question);
+                }
+            }
+        }
 
-        return redirect()->route('forms.index');
+        return view('site.form', ['form' => $form]);
     }
 
     /**
@@ -70,7 +104,7 @@ class FormController extends Controller
     public function show($id)
     {
         $form = Form::findOrFail($id);
-        if(!($form->created_by === auth()->user()->id)){
+        if (!($form->created_by === auth()->user()->id)) {
             abort(401);
         }
         return view('site.form', ['form' => $form]);
@@ -85,7 +119,7 @@ class FormController extends Controller
     public function edit($id)
     {
         $form = Form::findOrFail($id);
-        if(!($form->created_by === auth()->user()->id)){
+        if (!($form->created_by === auth()->user()->id)) {
             abort(401);
         }
         return view('site.form-modify', ['form' => $form]);
@@ -110,7 +144,55 @@ class FormController extends Controller
             'groups' => 'required|array|min:1',
         ]);
 
-        return redirect()->route('forms.index');
+        $form = Form::findOrFail($id);
+        if (!($form->created_by === auth()->user()->id)) {
+            abort(401);
+        }
+
+        $data = $request->request;
+        $data = $data->all();
+
+        $form->update(
+            [
+                'title' => $data['title'],
+                'expires_at' => $data['exp-date'],
+                'auth_required' => (isset($data['login-req'])),
+            ]
+        );
+        $questions = Question::where('form_id', '=', $form->id)->get();
+        foreach ($questions as $question) {
+            $choices = Question::where('question_id', '=', $question->id)->get();
+            foreach ($choices as $choice) {
+                $choice->delete();
+            }
+            $question->delete();
+        }
+
+        foreach ($data['groups'] as $group) {
+            $question = new Question(
+                [
+                    'question' => $group['question-title'],
+                    'answer_type' => $group['answer-type'],
+                    'required' => (isset($group['fill-required'])),
+                    'form_id' => $form->id,
+                ]
+            );
+            $question->save();
+
+            if ($question->answer_type == 'ONE_CHOICE' || $question->answer_type == 'MULTIPLE_CHOICES') {
+                foreach ($group['choice'] as $choice) {
+                    $choice = new Choice(
+                        [
+                            'choice' => $choice,
+                            'question_id' => $question->id,
+                        ]
+                    );
+                    $choice->save();
+                }
+            }
+        }
+
+        return view('site.form', ['form' => $form]);
     }
 
     /**
@@ -121,6 +203,17 @@ class FormController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $form = Form::findOrFail($id);
+        $questions = Question::where('form_id', '=', $form->id)->get();
+        foreach ($questions as $question) {
+            $choices = Question::where('question_id', '=', $question->id)->get();
+            foreach ($choices as $choice) {
+                $choice->delete();
+            }
+            $question->delete();
+        }
+        $form->delete();
+
+        return redirect('forms');
     }
 }

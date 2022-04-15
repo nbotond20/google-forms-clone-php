@@ -14,6 +14,7 @@ class Question extends Model
         'question',
         'answer_type',
         'required',
+        'form_id',
     ];
 
     public function form() {

@@ -12,6 +12,9 @@ class Answer extends Model
     // Fillable fields
     protected $fillable = [
         'answer',
+        'question_id',
+        'user_id',
+        'choice_id',
     ];
 
     public function question() {

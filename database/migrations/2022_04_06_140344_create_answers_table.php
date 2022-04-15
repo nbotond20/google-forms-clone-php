@@ -18,13 +18,13 @@ class CreateAnswersTable extends Migration
             $table->timestamps();
 
             $table->integer('question_id');
-            $table->foreign('question_id')->references('id')->on('questions');
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
 
-            $table->integer('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('user_id')->nullable();
+            $table->foreign('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
 
             $table->integer('choice_id')->nullable();
-            $table->foreign('choice_id')->references('id')->on('choices');
+            $table->foreign('choice_id')->nullable()->references('id')->on('choices')->onDelete('cascade');
 
             $table->text('answer')->nullable();
         });

@@ -19,14 +19,14 @@ class AnswerSeeder extends Seeder
     {
         $forms = Form::all();
         foreach ($forms as $form) {
-            $userCount = rand(2, 5);
+            $userCount = rand(5, User::count());
             $users = User::all()->random($userCount);
             foreach ($users as $user) {
                 $questions = Question::where('form_id', $form->id)->get();
                 foreach ($questions as $question) {
                     if (str_contains($question->answer_type, 'CHOICE')) {
                         if(str_contains($question->answer_type, 'ONE_CHOICE')){
-                            $choice = $question->choices->random()->first();
+                            $choice = $question->choices->random();
                             Answer::factory()->for($question)->create([
                                 'user_id' => $user->id,
                                 'question_id' => $question->id,

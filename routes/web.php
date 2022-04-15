@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\AnswerController;
 use Illuminate\Http\Request;
 
 /*
@@ -16,14 +17,14 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', function () {
-    return redirect('/home');
+    return redirect('forms');
 });
 
-Route::get('/home', function () {
+/* Route::get('/home', function () {
     return view('site.home');
-})->middleware(['auth'])->name('home');
+})->middleware(['auth'])->name('home'); */
 
 Route::resource('forms', FormController::class)->middleware(['auth']);
-
+Route::resource('form', AnswerController::class);
 
 require __DIR__.'/auth.php';

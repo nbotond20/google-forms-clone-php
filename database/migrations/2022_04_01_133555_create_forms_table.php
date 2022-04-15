@@ -19,8 +19,9 @@ class CreateFormsTable extends Migration
             $table->string('title', 255);
             $table->datetime('expires_at');
             $table->boolean('auth_required')->default(false);
-            $table->integer('created_by');
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->integer('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->string('link');
         });
     }
 
