@@ -16,9 +16,18 @@
             </thead>
             <tbody class="">
                 @foreach ($forms as $form)
+                    @php
+                        $expired = false;
+                        $startDate = strtotime(date('Y-m-d H:i:s', strtotime($form->expires_at)));
+                        $currentDate = strtotime(date('Y-m-d H:i:s'));
+
+                        if ($startDate < $currentDate) {
+                            $expired = true;
+                        }
+                    @endphp
                     <tr class="align-middle justify-center">
                         <td class="align-middle">
-                            <div>{{ $form->title }}</div>
+                            <div>{{ $form->title }} @if( $expired ) <span class="text-secondary">(Expired)</span> @endif</div>
                             <div class="text-secondary">{{ $form->created_at }}</div>
                         </td>
                         <td class="text-center align-middle">
@@ -31,7 +40,8 @@
                                 href="{{ route('forms.show', $form->id) }}">
                                 <i class="fa-solid fa-angles-right fa-fw"></i>
                             </a>
-                            <form method="POST" action="{{route('forms.destroy', $form->id)}}" class="d-flex align-middle justify-center">
+                            <form method="POST" action="{{ route('forms.destroy', $form->id) }}"
+                                class="d-flex align-middle justify-center">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger">
