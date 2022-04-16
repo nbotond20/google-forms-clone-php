@@ -38,14 +38,21 @@ class AnswerController extends Controller
      */
     public function store(Request $request)
     {
+        $startDate = strtotime(date('Y-m-d H:i:s', strtotime($request->request->all()['exp-date'])));
+        $currentDate = strtotime(date('Y-m-d H:i:s'));
+
+        if ($startDate < $currentDate) {
+            return redirect($request->server->get('HTTP_REFERER'));
+        }
+
         $request->validate([
-            'questions.*.*' => 'required',
+            'questions.text.required' => 'required',
         ]);
 
         $data = $request->request;
         $data = $data->all();
 
-        /* dd($data); */
+        dd($data);
 
         foreach ($data['questions'] as $q_key => $question) {
             if (isset($question['radio'])) {

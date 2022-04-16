@@ -53,6 +53,11 @@
                 <input type="datetime-local" class="form-control" id="exp-date" disabled
                     value="{{ $date }}T{{ $time }}">
             </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="login-req" name="login-req"
+                    @if ($form->auth_required) checked @endif disabled>
+                <label class="form-check-label" for="login-req">Login Required</label>
+            </div>
         </div>
 
         <h2>Questions</h2>
@@ -98,9 +103,6 @@
                                         {{ $answer->answer }}
                                     </div>
                                 @endforeach
-                                {{-- <div class="form-group mt-2">
-                                        <textarea class="form-control mb-1" id="text_{{ $uuid }}" placeholder="Your answer..."></textarea>
-                                    </div> --}}
                             @endif
 
                             @php
@@ -128,7 +130,7 @@
                                             </label>
                                             <span class="text-warning">
                                                 @if ($answers->count() > 0)
-                                                    {{ round((count($answers->where('choice_id', '=', $choice['id'])) / $answers->count()) * 100, 0) }}%
+                                                    {{ round((count($answers->where('choice_id', '=', $choice['id'])) / $answers->count()) * 100, 2) }}%
                                                 @endif
                                             </span>
                                         </div>
@@ -151,7 +153,7 @@
                                             </label>
                                             <span class="text-warning">
                                                 @if ($answers->count() > 0)
-                                                    {{ round((count($answers->where('choice_id', '=', $choice['id'])) / $answers->count()) * 100, 0) }}%
+                                                {{ round((count($answers->where('choice_id', '=', $choice['id'])) / $answers->count()) * 100, 2) }}%
                                                 @endif
                                             </span>
                                         </div>
