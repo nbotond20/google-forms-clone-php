@@ -48,8 +48,8 @@
                         @endphp
                         <input type="datetime-local" class="form-control" disabled
                             value="{{ $date }}T{{ $time }}">
-                        <input type="datetime-local" name="exp-date" id="exp-date"
-                            value="{{ $date }}T{{ $time }}" style="display: none;">
+                        <input type="hidden" name="exp-date" id="exp-date" value="{{ $date }}T{{ $time }}"
+                            style="display: none;">
                     </div>
                 </div>
 
@@ -78,18 +78,21 @@
                                     @if ($question->answer_type == 'TEXTAREA')
                                         <div class="form-group mt-2">
                                             <textarea class="form-control mb-1" id="questions[{{ $question->id }}][text]"
-                                                name="questions[{{ $question->id }}][text]@if ($question->required) [required]@else[not-required] @endif"
+                                                name="questions[text][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}]"
                                                 placeholder="Your answer..."></textarea>
                                         </div>
                                     @endif
 
                                     {{-- RADIO --}}
                                     @if ($question->answer_type == 'ONE_CHOICE')
+                                        <input class="form-check-input" type="hidden"
+                                            name="questions[radio][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}]"
+                                            id="radio_hidden" value={{ null }}>
                                         @foreach ($choices as $choice)
                                             <div class="form-group mt-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio"
-                                                        name="questions[{{ $question->id }}][radio]@if ($question->required) [required]@else[not-required] @endif"
+                                                        name="questions[radio][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}]"
                                                         id="radio_[{{ $choice->id }}]" value="{{ $choice->id }}">
                                                     <label class="form-check-label" for="radio_[{{ $choice->id }}]">
                                                         {{ $choice->choice }}
@@ -101,11 +104,14 @@
 
                                     {{-- CHECKBOXES --}}
                                     @if ($question->answer_type == 'MULTIPLE_CHOICES')
+                                        <input class="form-check-input" type="hidden"
+                                            name="questions[checkbox][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}]"
+                                            id="checkbox_hidden" value={{ null }}>
                                         @foreach ($choices as $choice)
                                             <div class="form-group mt-2">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox"
-                                                        name="questions[{{ $question->id }}][checkbox][{{ $choice->id }}]@if ($question->required) [required]@else[not-required] @endif"
+                                                        name="questions[checkbox][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}][{{ $choice->id }}]"
                                                         id="checkbox_[{{ $choice->id }}]" value="{{ $choice->id }}">
                                                     <label class="form-check-label" for="checkbox_[{{ $choice->id }}]">
                                                         {{ $choice->choice }}
