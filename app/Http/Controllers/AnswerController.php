@@ -125,7 +125,7 @@ class AnswerController extends Controller
                     foreach ($req as $question_id => $answer) {
                         if($answer !== null) {
                             $answer = Answer::create([
-                                'user_id' => Auth::user()->id,
+                                'user_id' => (Auth::check()) ? Auth::user()->id : null,
                                 'question_id' => $question_id,
                                 'answer' => $answer,
                                 'choice_id' => null,
@@ -139,7 +139,7 @@ class AnswerController extends Controller
                     foreach ($req as $question_id => $choice) {
                         if($choice !== null) {
                             $answer = Answer::create([
-                                'user_id' => Auth::user()->id,
+                                'user_id' => (Auth::check()) ? Auth::user()->id : null,
                                 'question_id' => $question_id,
                                 'answer' => null,
                                 'choice_id' => $choice,
@@ -154,7 +154,7 @@ class AnswerController extends Controller
                         foreach ($choices as $choice) {
                             if($choice !== null) {
                                 $answer = Answer::create([
-                                    'user_id' => Auth::user()->id,
+                                    'user_id' => (Auth::check()) ? Auth::user()->id : null,
                                     'question_id' => $question_id,
                                     'answer' => null,
                                     'choice_id' => $choice,

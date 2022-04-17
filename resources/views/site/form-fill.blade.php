@@ -73,13 +73,12 @@
                                         </span> </h3>
                                     <input type="text" class="form-control form-control-lg"
                                         value="{{ $question->question }}" disabled>
-
                                     {{-- TEXT --}}
                                     @if ($question->answer_type == 'TEXTAREA')
                                         <div class="form-group mt-2">
-                                            <textarea class="form-control mb-1" id="questions[{{ $question->id }}][text]"
+                                            <textarea class="form-control mb-1 @if(in_array('questions.text.required.'.$question->id, $errors->keys())) is-invalid @endif" id="questions[{{ $question->id }}][text]"
                                                 name="questions[text][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}]"
-                                                placeholder="Your answer..."></textarea>
+                                                placeholder="Your answer..." >@if(old('questions') !== null){{old('questions')['text'][$question->required ? 'required' : 'not-required'][$question->id]}}@endif</textarea>
                                         </div>
                                     @endif
 
@@ -91,9 +90,12 @@
                                         @foreach ($choices as $choice)
                                             <div class="form-group mt-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
+                                                    <input class="form-check-input @if(in_array('questions.radio.required.'.$question->id, $errors->keys())) is-invalid @endif" type="radio"
                                                         name="questions[radio][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}]"
-                                                        id="radio_[{{ $choice->id }}]" value="{{ $choice->id }}">
+                                                        id="radio_[{{ $choice->id }}]" value="{{ $choice->id }}"
+                                                        @if(old('questions') !== null && intval(old('questions')['radio'][$question->required ? 'required' : 'not-required'][$question->id]) === $choice->id)
+                                                            checked
+                                                        @endif>
                                                     <label class="form-check-label" for="radio_[{{ $choice->id }}]">
                                                         {{ $choice->choice }}
                                                     </label>
@@ -110,9 +112,12 @@
                                         @foreach ($choices as $choice)
                                             <div class="form-group mt-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox"
+                                                    <input class="form-check-input @if(in_array('questions.checkbox.required.'.$question->id, $errors->keys())) is-invalid @endif" type="checkbox"
                                                         name="questions[checkbox][{{ $question->required ? 'required' : 'not-required' }}][{{ $question->id }}][{{ $choice->id }}]"
-                                                        id="checkbox_[{{ $choice->id }}]" value="{{ $choice->id }}">
+                                                        id="checkbox_[{{ $choice->id }}]" value="{{ $choice->id }}"
+                                                        @if(old('questions') !== null && isset(old('questions')['checkbox'][$question->required ? 'required' : 'not-required'][$question->id][$choice->id]) && intval(old('questions')['checkbox'][$question->required ? 'required' : 'not-required'][$question->id][$choice->id]) === $choice->id)
+                                                            checked
+                                                        @endif>
                                                     <label class="form-check-label" for="checkbox_[{{ $choice->id }}]">
                                                         {{ $choice->choice }}
                                                     </label>
