@@ -121,15 +121,12 @@
                             @if ($question->answer_type == 'ONE_CHOICE')
                                 @foreach ($choices2 as $choice)
                                     <div class="form-group mt-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio"
-                                                name="groups[{{ $uuid }}][answer]"
-                                                id="radio_{{ $uuid }}_{{ $choice['id'] }}"
-                                                value="{{ $choice['id'] }}">
-                                            <label class="form-check-label"
+                                        <div class="">
+                                            <i class="fa-regular fa-circle"></i>
+                                            <span class="font-weight-normal"
                                                 for="radio_{{ $uuid }}_{{ $choice['id'] }}">
                                                 {{ $choice['choice'] }}
-                                            </label>
+                                            </span>
                                             <span class="text-warning">
                                                 @if ($answers->count() > 0)
                                                     {{ round((count($answers->where('choice_id', '=', $choice['id'])) / $answers->count()) * 100, 2) }}%
@@ -144,18 +141,15 @@
                             @if ($question->answer_type == 'MULTIPLE_CHOICES')
                                 @foreach ($choices2 as $choice)
                                     <div class="form-group mt-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox"
-                                                name="groups[{{ $uuid }}][answer][]"
-                                                id="checkbox_{{ $uuid }}_{{ $choice['id'] }}"
-                                                value="{{ $choice['id'] }}">
-                                            <label class="form-check-label"
+                                        <div class="">
+                                            <i class="fa-regular fa-square"></i>
+                                            <span class="form-check-label"
                                                 for="checkbox_{{ $uuid }}_{{ $choice['id'] }}">
                                                 {{ $choice['choice'] }}
-                                            </label>
+                                            </span>
                                             <span class="text-warning">
                                                 @if ($answers->count() > 0)
-                                                {{ round((count($answers->where('choice_id', '=', $choice['id'])) / $answers->count()) * 100, 2) }}%
+                                                    {{ round((count($answers->where('choice_id', '=', $choice['id'])) / $answers->count()) * 100, 2) }}%
                                                 @endif
                                             </span>
                                         </div>

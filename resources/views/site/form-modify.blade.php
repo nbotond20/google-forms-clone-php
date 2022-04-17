@@ -63,11 +63,11 @@
             <div class="card p-3 mt-2 mb-3">
                 <div id="groups">
                     @if (old('groups') !== null)
-                        @php
-                            $num = 0;
-                            $uuid = Str::uuid();
-                        @endphp
                         @foreach (old('groups') as $group)
+                            @php
+                                $num = 0;
+                                $uuid = Str::uuid();
+                            @endphp
                             <div class="mb-3" id="group_{{ $uuid }}">
                                 <h3>{{ ++$num }}. Question</h3>
                                 <div class="form-group form-check">
@@ -104,11 +104,25 @@
                                                     @php
                                                         $choiceID = Str::uuid();
                                                     @endphp
-                                                    <input type="text"
-                                                        class="form-control mb-1 @if ($choice === null) is-invalid @endif"
-                                                        id="choice_{{ $uuid }}_{{ $choiceID }}"
-                                                        name="groups[{{ $uuid }}][choice][{{ $choiceID }}]"
-                                                        placeholder="Choice" value="{{ $choice }}">
+                                                    @if ($loop->index == 0)
+                                                        <div class="d-flex gap-1 align-middle justify-middle mb-1">
+                                                            <input type="text"
+                                                                class="form-control  @if ($choice === null) is-invalid @endif"
+                                                                id="choice_{{ $uuid }}_{{ $choiceID }}"
+                                                                name="groups[{{ $uuid }}][choice][{{ $choiceID }}]"
+                                                                placeholder="Choice" value="{{ $choice }}">
+                                                        </div>
+                                                    @else
+                                                        <div class="d-flex gap-1 align-middle justify-middle mb-1">
+                                                            <input type="text"
+                                                                class="form-control @if ($choice === null) is-invalid @endif"
+                                                                id="choice_{{ $uuid }}_{{ $choiceID }}"
+                                                                name="groups[{{ $uuid }}][choice][{{ $choiceID }}]"
+                                                                placeholder="Choice" value="{{ $choice }}">
+                                                            <button type="button" class="btn btn-danger delete-choice"
+                                                                data-group-id="{{ $uuid }}_{{ $choiceID }}">-</button>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
                                                 <div class="mt-2 d-flex justify-content-center">
                                                     <button type="button" class="btn btn-secondary add-choice"
@@ -116,9 +130,7 @@
                                                 </div>
                                             </div>
                                         @endif
-
                                     </div>
-
                                     <div class="d-flex justify-content-center">
                                         <button type="button" class="delete-group btn btn-danger"
                                             data-group-id="{{ $uuid }}">Delete Question</button>
@@ -290,7 +302,8 @@
 
             document.addEventListener('click', (event) => {
                 if (event.target && event.target.classList.contains('add-choice')) {
-                    const id = event.target.parentElement.previousElementSibling.querySelector('input').id.split('_')[1];
+                    const id = event.target.parentElement.previousElementSibling.querySelector('input').id.split('_')[
+                        1];
                     /* const id = event.target.parentElement.previousElementSibling.id; */
                     event.target.parentElement.insertAdjacentHTML("beforebegin", choiceTemplate(id, uuid.v4()));
                 }
