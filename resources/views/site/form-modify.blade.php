@@ -54,7 +54,7 @@
                 </div>
                 <div class="form-group form-check">
                     <input type="checkbox" class="form-check-input" id="login-req" name="login-req"
-                        @if (old('login-req') !== null || $form->auth_required) checked @endif>
+                        @if (old('login-req') !== null || (isset($form) && $form->auth_required)) checked @endif>
                     <label class="form-check-label" for="login-req">Login Required</label>
                 </div>
             </div>
