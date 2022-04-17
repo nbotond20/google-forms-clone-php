@@ -9,8 +9,10 @@
     <div class="container pt-3">
         <div class="form-group mb-3">
             <label for="title">Link to share</label>
-            <input type="text" class="form-control" id="link" disabled
-                value="localhost:8000/form/{{ $form->link }}">
+            <a href="http://localhost:8000/form/{{ $form->link }}">
+                <input type="text" class="form-control" id="link" disabled
+                    value="http://localhost:8000/form/{{ $form->link }}">
+            </a>
         </div>
     </div>
     <div class="container pt-3">

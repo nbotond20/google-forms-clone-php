@@ -13,7 +13,7 @@
     }
     @endphp
     @if (!$expired)
-        @if ($errors->any())
+        {{-- @if ($errors->any())
             <div class="alert alert-danger align-middle" role="alert">
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
@@ -21,7 +21,7 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+        @endif --}}
         @php
             $questions = $form->questions()->get();
         @endphp
